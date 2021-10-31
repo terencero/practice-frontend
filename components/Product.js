@@ -16,6 +16,7 @@ export default function Product({ product }) {
         <Link href={`/product/${product.id}`}>{product.name}</Link>
       </TitleStyles>
       <PriceTagStyles>{formatCurrency(product.price)}</PriceTagStyles>
+      <p>{product.description}</p>
     </ItemStyles>
   );
 }
