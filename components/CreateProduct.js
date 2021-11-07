@@ -48,16 +48,22 @@ export default function CreateProduct() {
     <FormStyles
       onSubmit={async (e) => {
         e.preventDefault();
-        console.log('inputs ', e.inputs);
-        await createProduct();
+        const res = await createProduct();
+        console.log('from mutation', res)
         clearForm();
+        console.log('mutation func', createProduct)
+        console.log('data? ', data)
         Router.push({
-          pathname: `/product/${data.createProduct.id}`,
+          pathname: `/product/${res.data.createProduct.id}`,
         });
       }}
     >
       <DisplayError error={error} />
       <fieldset disabled={loading} aria-busy={loading}>
+        <label htmlFor="image">
+          Image
+          <input type="file" id="image" name="image" onChange={handleChange} />
+        </label>
         <label htmlFor="name">
           Name
           <input
