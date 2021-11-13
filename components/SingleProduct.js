@@ -4,7 +4,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import DisplayError from './ErrorMessage';
 
-const SINGLE_ITEM_QUERY = gql`
+export const SINGLE_ITEM_QUERY = gql`
   query SINGLE_ITEM_QUERY($id: ID!) {
     Product(where: { id: $id }) {
       name
@@ -54,7 +54,7 @@ export default function SingleProduct({ id }) {
       </Head>
       <img
         src={Product.photo.image.publicUrlTransformed}
-        alt={Product.altText}
+        alt={Product.photo.altText}
       />
       <div className="details">
         <h2>{Product.name}</h2>
