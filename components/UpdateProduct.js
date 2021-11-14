@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
+import Router from 'next/dist/next-server/server/router';
 import { SINGLE_ITEM_QUERY } from './SingleProduct';
 import useForm from '../lib/useForm';
 import FormStyles from './styles/Form';
@@ -14,7 +15,7 @@ const UPDATE_PRODUCT_MUTATION = gql`
   ) {
     updateProduct(
       id: $id
-      data: { id: $id, name: $name, description: $description, price: $price }
+      data: { name: $name, description: $description, price: $price }
     ) {
       id
       name
@@ -31,32 +32,36 @@ export default function UpdateProduct({ id }) {
 
   const [
     updateProduct,
-    { data: mutationData, error: mutationError, loading: mutationLoadin },
-  ] = useMutation(UPDATE_PRODUCT_MUTATION, {
-    variables: {
-      id,
-    },
-  });
+    { data: mutationData, error: mutationError, loading: mutationLoading },
+  ] = useMutation(UPDATE_PRODUCT_MUTATION);
+
+  const { inputs, handleChange, clearForm, resetForm } = useForm(data?.Product);
+
+  if (loading) return <p>loading...</p>;
+
   return (
     <FormStyles
       onSubmit={async (e) => {
         e.preventDefault();
-        const res = await createProduct();
-        console.log('from mutation', res)
+        const res = await updateProduct({
+          variables: {
+            id,
+            data: {
+              name: inputs.name,
+              price: inputs.price,
+              description: inputs.description,
+            },
+          },
+        });
+        console.log('from mutation', res);
         clearForm();
-        console.log('mutation func', createProduct)
-        console.log('data? ', data)
         Router.push({
           pathname: `/product/${res.data.createProduct.id}`,
         });
       }}
     >
-      <DisplayError error={error} />
-      <fieldset disabled={loading} aria-busy={loading}>
-        <label htmlFor="image">
-          Image
-          <input type="file" id="image" name="image" onChange={handleChange} />
-        </label>
+      <DisplayError error={error || mutationError} />
+      <fieldset disabled={mutationLoading} aria-busy={mutationLoading}>
         <label htmlFor="name">
           Name
           <input
@@ -89,14 +94,8 @@ export default function UpdateProduct({ id }) {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">+ Add Product</button>
+        <button type="submit">Update Product</button>
       </fieldset>
-      <button type="button" onClick={clearForm}>
-        Clear Form
-      </button>
-      <button type="button" onClick={resetForm}>
-        Reset Form
-      </button>
     </FormStyles>
   );
 }
