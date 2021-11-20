@@ -26,6 +26,11 @@ const UPDATE_PRODUCT_MUTATION = gql`
 `;
 
 export default function UpdateProduct({ id }) {
+  const initialFormData = {
+    name: '',
+    price: '',
+    description: '',
+  };
   const { data, error, loading } = useQuery(SINGLE_ITEM_QUERY, {
     variables: { id },
   });
@@ -35,7 +40,9 @@ export default function UpdateProduct({ id }) {
     { data: mutationData, error: mutationError, loading: mutationLoading },
   ] = useMutation(UPDATE_PRODUCT_MUTATION);
 
-  const { inputs, handleChange, clearForm, resetForm } = useForm(data?.Product);
+  const { inputs, handleChange, clearForm, resetForm } = useForm(
+    data?.Product || initialFormData
+  );
 
   if (loading) return <p>loading...</p>;
 
@@ -55,9 +62,6 @@ export default function UpdateProduct({ id }) {
         });
         console.log('from mutation', res);
         clearForm();
-        Router.push({
-          pathname: `/product/${res.data.createProduct.id}`,
-        });
       }}
     >
       <DisplayError error={error || mutationError} />
