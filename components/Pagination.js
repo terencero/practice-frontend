@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import gql from 'graphql-tag';
-import PaginationStyles from './styles/PaginationStyles';
 import { useQuery } from '@apollo/client';
+import PaginationStyles from './styles/PaginationStyles';
 import DisplayError from './ErrorMessage';
 import { perPage } from '../config';
 
-const PAGINATION_QUERY = gql`
+export const PAGINATION_QUERY = gql`
   query PAGINATION_QUERY {
     _allProductsMeta {
       count
@@ -26,12 +26,20 @@ export default function Pagination({ page }) {
   return (
     <PaginationStyles>
       <Head>
-        <title>Project 0 - Page {page} of ___</title>
+        <title>
+          Project 0 - Page {page} of {pageCount}
+        </title>
       </Head>
-      <Link href={`/products/${page - 1}`}>Prev</Link>
-      <p>Page __ of {pageCount}</p>
+      <Link href={`/products/${page - 1}`}>
+        <a aria-disabled={page <= 1}>Prev</a>
+      </Link>
+      <p>
+        Page {page} of {pageCount}
+      </p>
       <p>{count} Items Total</p>
-      <Link href={`/products/${page + 1}`}>Next</Link>
+      <Link href={`/products/${page + 1}`}>
+        <a aria-disabled={page >= pageCount}>Next</a>
+      </Link>
     </PaginationStyles>
   );
 }
