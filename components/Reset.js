@@ -22,6 +22,7 @@ const RESET_MUTATION = gql`
   }
 `;
 
+// eslint-disable-next-line react/prop-types
 export default function Reset({ token }) {
   const { inputs, handleChange, resetForm } = useForm({
     email: '',
