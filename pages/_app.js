@@ -8,6 +8,7 @@ import Page from '../components/Page';
 import withData from '../lib/withData';
 
 import 'nprogress/nprogress.css';
+import { CartStateProvider } from '../lib/cartState';
 // import { Component } from 'react';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -17,9 +18,11 @@ Router.events.on('routeChangeError', () => NProgress.done());
 function MyApp({ Component, pageProps, apollo }) {
   return (
     <ApolloProvider client={apollo}>
-      <Page>
-        <Component {...pageProps} />
-      </Page>
+      <CartStateProvider>
+        <Page>
+          <Component {...pageProps} />
+        </Page>
+      </CartStateProvider>
     </ApolloProvider>
   );
 }
@@ -27,8 +30,8 @@ function MyApp({ Component, pageProps, apollo }) {
 MyApp.getInitialProps = async function ({ Component, ctx }) {
   let pageProps = {};
 
-  console.log('get initial props has props?', Component.getInitialProps)
-  console.log('get initial props ctx', ctx)
+  console.log('get initial props has props?', Component.getInitialProps);
+  console.log('get initial props ctx', ctx);
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }

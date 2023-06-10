@@ -4,6 +4,7 @@ import Supreme from './styles/Supreme';
 import formatCurrency from '../lib/formatCurrency';
 import { useUser } from './User';
 import calcTotalPrice from '../lib/calcTotalPrice';
+import { useCart } from '../lib/cartState';
 
 const CartItemStyles = styled.li`
   padding: 1rem 0;
@@ -37,20 +38,21 @@ function CartItem({ cartItem }) {
         <em>
           {cartItem.quantity} &times; {formatCurrency(product.price)} each
         </em>
-      </div>  
+      </div>
     </CartItemStyles>
   );
 }
 
 export default function Cart() {
   const me = useUser();
+  const data = useCart();
 
   if (!me) return null;
 
   return (
     <CartStyles open>
       <header>
-        <Supreme>{me.email}' cart</Supreme>
+        <Supreme>{me.email}'s cart</Supreme>
       </header>
       <ul>
         {me.cart.map((cartItem) => (
